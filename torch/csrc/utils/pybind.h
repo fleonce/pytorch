@@ -10,6 +10,7 @@
 #include <pybind11/stl.h>
 
 #include <torch/csrc/Device.h>
+#include <torch/csrc/Dtype.h>
 #include <torch/csrc/DynamicTypes.h>
 #include <torch/csrc/Generator.h>
 #include <torch/csrc/MemoryFormat.h>
@@ -161,6 +162,28 @@ struct type_caster<at::MemoryFormat> {
       return_value_policy /* policy */,
       handle /* parent */) {
     return handle(torch::utils::getTHPMemoryFormat(src));
+  }
+};
+
+template<>
+struct type_caster<at::ScalarType> {
+ public:
+  PYBIND11_TYPE_CASTER(at::ScalarType, _("torch.dtype"));
+
+  bool load(handle src, bool) {
+    PyObject * obj = src.ptr();
+    if (THPDtype_Check(obj)) {
+      value = reinterpret_cast<THPDtype *>(obj)->scalar_type;
+      return true;
+    }
+    return false;
+  }
+
+  static handle cast(
+      at::ScalarType src,
+      return_value_policy,
+      handle) {
+    return handle((PyObject * )torch::getTHPDtype(src));
   }
 };
 
