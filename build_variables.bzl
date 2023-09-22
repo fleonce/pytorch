@@ -916,6 +916,7 @@ libtorch_python_core_sources = [
 
 libtorch_python_distributed_core_sources = [
     "torch/csrc/distributed/c10d/init.cpp",
+    "torch/csrc/distributed/c10d/ProcessGroupWrapper2.cpp",
     "torch/csrc/distributed/c10d/python_comm_hook.cpp",
 ]
 
